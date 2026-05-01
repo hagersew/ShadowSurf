@@ -1,6 +1,6 @@
 {
   "name": "shadowsurf",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Modern dark mode Chrome extension with per-site controls.",
   "type": "module",
   "scripts": {
