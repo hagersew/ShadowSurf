@@ -70,6 +70,18 @@ export default function App() {
     await refresh();
   }
 
+  async function persistVisual(brightness: number, contrast: number) {
+    setSettings((prev) => ({
+      ...prev,
+      visual: { brightness, contrast }
+    }));
+    await chrome.runtime.sendMessage({
+      type: "SET_VISUAL",
+      payload: { brightness, contrast }
+    });
+    await chrome.runtime.sendMessage({ type: "APPLY_SETTINGS_TO_ACTIVE_TAB" });
+  }
+
   return (
     <Container minW="360px" py={4}>
       <Stack gap={4}>
@@ -116,11 +128,17 @@ export default function App() {
             min={60}
             max={120}
             step={1}
+            onValueChange={({ value }) =>
+              setSettings((prev) => ({
+                ...prev,
+                visual: {
+                  ...prev.visual,
+                  brightness: value[0]
+                }
+              }))
+            }
             onValueChangeEnd={({ value }) =>
-              void pushAndRefresh({
-                type: "SET_VISUAL",
-                payload: { brightness: value[0], contrast: settings.visual.contrast }
-              })
+              void persistVisual(value[0], settings.visual.contrast)
             }
           >
             <Slider.Control>
@@ -139,11 +157,17 @@ export default function App() {
             min={70}
             max={130}
             step={1}
+            onValueChange={({ value }) =>
+              setSettings((prev) => ({
+                ...prev,
+                visual: {
+                  ...prev.visual,
+                  contrast: value[0]
+                }
+              }))
+            }
             onValueChangeEnd={({ value }) =>
-              void pushAndRefresh({
-                type: "SET_VISUAL",
-                payload: { brightness: settings.visual.brightness, contrast: value[0] }
-              })
+              void persistVisual(settings.visual.brightness, value[0])
             }
           >
             <Slider.Control>
