@@ -25,15 +25,6 @@ export function getSiteStatus(hostname: string, settings: ExtensionSettings): Si
     return { hostname, enabled: false, reason: "blacklist_hit" };
   }
 
-  if (settings.whitelist.length > 0) {
-    const enabled = containsDomain(hostname, settings.whitelist);
-    return {
-      hostname,
-      enabled,
-      reason: enabled ? "whitelist_hit" : "default"
-    };
-  }
-
   return { hostname, enabled: true, reason: "default" };
 }
 

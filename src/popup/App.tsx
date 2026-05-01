@@ -16,8 +16,6 @@ import SiteStatusCard from "./components/SiteStatusCard";
 import type { ExtensionSettings, SiteStatus } from "../shared/types";
 import { DEFAULT_SETTINGS } from "../shared/types";
 
-type Mode = "whitelist" | "blacklist";
-
 async function getActiveHostname(): Promise<string | null> {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab?.url) {
@@ -34,7 +32,6 @@ export default function App() {
   const [settings, setSettings] = useState<ExtensionSettings>(DEFAULT_SETTINGS);
   const [siteStatus, setSiteStatus] = useState<SiteStatus | null>(null);
   const [activeHostname, setActiveHostname] = useState<string | null>(null);
-  const [mode, setMode] = useState<Mode>("blacklist");
   const [newDomain, setNewDomain] = useState("");
 
   async function refresh() {
@@ -62,7 +59,7 @@ export default function App() {
     void refresh();
   }, []);
 
-  const currentList = useMemo(() => settings[mode], [mode, settings]);
+  const blacklist = useMemo(() => settings.blacklist, [settings]);
 
   async function pushAndRefresh(message: object) {
     await chrome.runtime.sendMessage(message);
@@ -180,17 +177,12 @@ export default function App() {
         </Box>
 
         <Box borderWidth="1px" borderRadius="md" p={3}>
-          <HStack justify="space-between" mb={2}>
-            <Text fontWeight="semibold">Domain rules</Text>
-            <HStack gap={1}>
-              <Button size="xs" variant={mode === "whitelist" ? "solid" : "outline"} onClick={() => setMode("whitelist")}>
-                Whitelist
-              </Button>
-              <Button size="xs" variant={mode === "blacklist" ? "solid" : "outline"} onClick={() => setMode("blacklist")}>
-                Blacklist
-              </Button>
-            </HStack>
-          </HStack>
+          <Text fontWeight="semibold" mb={1}>
+            Blacklist
+          </Text>
+          <Text fontSize="xs" opacity={0.75} mb={2}>
+            Dark mode runs on every site except these domains.
+          </Text>
           <HStack>
             <Input
               size="sm"
@@ -206,7 +198,7 @@ export default function App() {
                 }
                 void pushAndRefresh({
                   type: "ADD_DOMAIN_RULE",
-                  payload: { mode, domain: newDomain }
+                  payload: { mode: "blacklist", domain: newDomain }
                 });
                 setNewDomain("");
               }}
@@ -215,8 +207,8 @@ export default function App() {
             </Button>
           </HStack>
           <Stack mt={2} gap={1}>
-            {currentList.map((domain) => (
-              <HStack key={`${mode}-${domain}`} justify="space-between">
+            {blacklist.map((domain) => (
+              <HStack key={`blacklist-${domain}`} justify="space-between">
                 <Text fontSize="sm">{domain}</Text>
                 <Button
                   size="xs"
@@ -224,7 +216,7 @@ export default function App() {
                   onClick={() =>
                     void pushAndRefresh({
                       type: "REMOVE_DOMAIN_RULE",
-                      payload: { mode, domain }
+                      payload: { mode: "blacklist", domain }
                     })
                   }
                 >
@@ -232,9 +224,9 @@ export default function App() {
                 </Button>
               </HStack>
             ))}
-            {currentList.length === 0 ? (
+            {blacklist.length === 0 ? (
               <Text fontSize="xs" opacity={0.75}>
-                No domains in {mode}.
+                No blacklisted domains.
               </Text>
             ) : null}
           </Stack>

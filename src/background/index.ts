@@ -30,9 +30,7 @@ function withSiteToggle(
   const next = { ...settings };
   if (enabled) {
     next.blacklist = removeDomain(next.blacklist, hostname);
-    next.whitelist = upsertDomain(next.whitelist, hostname);
   } else {
-    next.whitelist = removeDomain(next.whitelist, hostname);
     next.blacklist = upsertDomain(next.blacklist, hostname);
   }
   return next;

@@ -16,7 +16,7 @@ export interface ExtensionSettings {
 export interface SiteStatus {
   hostname: string;
   enabled: boolean;
-  reason: "global_off" | "whitelist_hit" | "blacklist_hit" | "default";
+  reason: "global_off" | "blacklist_hit" | "default";
 }
 
 export const DEFAULT_SETTINGS: ExtensionSettings = {
