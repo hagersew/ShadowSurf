@@ -1,0 +1,29 @@
+{
+  "name": "shadowsurf",
+  "version": "1.0.0",
+  "description": "Modern dark mode Chrome extension with per-site controls.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@chakra-ui/react": "^3.35.0",
+    "@emotion/react": "^11.14.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.4.0",
+    "@types/chrome": "^0.1.40",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^6.0.3",
+    "vite": "^5.4.19"
+  }
+}
