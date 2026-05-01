@@ -11,6 +11,13 @@ ShadowSurf is an open-source Chrome extension that brings modern dark mode to we
 - Visual tuning controls (brightness + contrast).
 - Persistent settings using `chrome.storage`.
 
+## Branding and Icons
+
+- Extension branding now uses the official ShadowSurf logo.
+- Chrome extension icons are stored in `assets/icons`.
+- Included compatible sizes: `16x16`, `32x32`, `48x48`, `128x128` (used by `manifest.json`).
+- Master source export is available as `assets/icons/icon-1024.png` for store/listing assets.
+
 ## Permissions
 
 - `activeTab`: read active tab URL for current-site controls.
