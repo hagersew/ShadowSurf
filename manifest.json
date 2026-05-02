@@ -9,8 +9,7 @@
     "48": "assets/icons/icon-48.png",
     "128": "assets/icons/icon-128.png"
   },
-  "permissions": ["activeTab", "storage", "scripting"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": ["activeTab", "storage"],
   "background": {
     "service_worker": "src/background/index.ts",
     "type": "module"
