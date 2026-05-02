@@ -58,6 +58,12 @@ const PANEL_SURFACE_SELECTORS = [
   "code"
 ].join(", ");
 
+/** Elements that should not receive forced text color (media, chrome, replaced content). */
+const NO_FORCED_TEXT_COLOR =
+  ":not(img):not(video):not(canvas):not(picture):not(audio):not(iframe):not(object):not(embed)" +
+  ":not(style):not(script):not(noscript):not(template):not(meta):not(link):not(title)" +
+  ":not(br):not(hr):not(source):not(track):not(map):not(area)";
+
 export function buildDarkModeCss(brightness: number, contrast: number): string {
   const b = Math.min(200, Math.max(1, brightness));
   const c = Math.min(200, Math.max(1, contrast));
@@ -65,14 +71,20 @@ export function buildDarkModeCss(brightness: number, contrast: number): string {
 html.${ROOT_CLASS} {
   color-scheme: dark;
   background: #111 !important;
-  color: #e8e8e8;
+  color: #e8e8e8 !important;
   min-height: 100%;
 }
 
 html.${ROOT_CLASS} body {
   background-color: #111 !important;
-  color: #e8e8e8;
+  color: #e8e8e8 !important;
   min-height: 100%;
+}
+
+/* Sites often set explicit dark text colors; without this, text stays dark on our dark surfaces. */
+html.${ROOT_CLASS} *${NO_FORCED_TEXT_COLOR} {
+  color: #e4e4e4 !important;
+  -webkit-text-fill-color: currentColor !important;
 }
 
 ${scopeEvery(CONTENT_SURFACE_SELECTORS)},
@@ -90,8 +102,16 @@ ${scopeEvery(TABLE_SURFACE_SELECTORS)} td {
   border-color: #444 !important;
 }
 
-html.${ROOT_CLASS} a {
+html.${ROOT_CLASS} a,
+html.${ROOT_CLASS} a * {
   color: #8ab4f8 !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+html.${ROOT_CLASS} a:visited,
+html.${ROOT_CLASS} a:visited * {
+  color: #c58af9 !important;
+  -webkit-text-fill-color: currentColor !important;
 }
 
 html.${ROOT_CLASS} input:not([type="image"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]),
