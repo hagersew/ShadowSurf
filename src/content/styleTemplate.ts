@@ -8,12 +8,17 @@ function scopeEvery(selectorList: string): string {
     .join(",\n");
 }
 
-/** Shells that commonly wrap the primary page content (high-specificity sites like Wikipedia). */
+/** Primary content shells (high-specificity sites like Wikipedia). */
 const CONTENT_SURFACE_SELECTORS = [
   "main",
   '[role="main"]',
   "article",
   "#content",
+  "#main-content",
+  ".main-content",
+  ".content-area",
+  ".primary-content",
+  "[data-main-content]",
   "#bodyContent",
   "#mw-content-text",
   ".mw-parser-output",
@@ -33,10 +38,95 @@ const CONTENT_SURFACE_SELECTORS = [
   ".vector-page-toolbar"
 ].join(", ");
 
+/**
+ * MediaWiki Vector (2022): the pinned TOC / main menu / tools live in `#mw-panel` and
+ * `.vector-column-start`; without these, the left column stays the default light surface.
+ */
+const MEDIAWIKI_VECTOR_SURFACE_SELECTORS = [
+  "#mw-panel",
+  "#mw-panel-toc",
+  "#mw-panel-toc-list",
+  "#vector-toc",
+  "#vector-toc-pinned-container",
+  "#vector-toc-unpinned-container",
+  "#vector-main-menu-pinned-container",
+  "#vector-main-menu-unpinned-container",
+  "#vector-page-tools-pinned-container",
+  "#vector-page-tools-unpinned-container",
+  "#vector-appearance-pinned-container",
+  "#vector-appearance-unpinned-container",
+  "#vector-page-titlebar-toc-unpinned-container",
+  "#vector-sticky-header-toc-unpinned-container",
+  ".mw-page-container",
+  ".mw-page-container-inner",
+  ".mw-sidebar",
+  ".mw-table-of-contents-container",
+  ".vector-column-start",
+  ".vector-column-end",
+  ".vector-toc",
+  ".vector-toc-contents",
+  ".vector-main-menu-container",
+  ".vector-pinned-container",
+  ".vector-unpinned-container"
+].join(", ");
+
+/**
+ * Headers, footers, nav, app roots, and dialogs often sit outside `main` and stayed light while
+ * global text was forced light — low contrast. These selectors darken common chrome regions.
+ */
+const LAYOUT_SURFACE_SELECTORS = [
+  "header",
+  "footer",
+  "nav",
+  "aside",
+  "section",
+  '[role="banner"]',
+  '[role="navigation"]',
+  '[role="contentinfo"]',
+  '[role="complementary"]',
+  '[role="region"]',
+  '[role="search"]',
+  '[role="dialog"]',
+  '[role="alertdialog"]',
+  "#header",
+  "#footer",
+  "#nav",
+  "#sidebar",
+  "#masthead",
+  "#app",
+  "#root",
+  "#page",
+  "#wrapper",
+  "#container",
+  ".site-header",
+  ".site-footer",
+  ".page-header",
+  ".main-header",
+  ".main-footer",
+  ".navbar",
+  ".nav-bar",
+  ".top-bar",
+  ".app-bar",
+  ".masthead",
+  ".app-root",
+  ".layout",
+  ".page-wrapper",
+  ".site-wrapper",
+  ".page-shell",
+  ".sticky-header",
+  ".global-footer",
+  ".l-footer"
+].join(", ");
+
 const TABLE_SURFACE_SELECTORS = [
   "main table",
   '[role="main"] table',
   "article table",
+  "header table",
+  "footer table",
+  "nav table",
+  "aside table",
+  "section table",
   "#mw-content-text table",
   ".mw-parser-output table"
 ].join(", ");
@@ -88,6 +178,8 @@ html.${ROOT_CLASS} *${NO_FORCED_TEXT_COLOR} {
 }
 
 ${scopeEvery(CONTENT_SURFACE_SELECTORS)},
+${scopeEvery(LAYOUT_SURFACE_SELECTORS)},
+${scopeEvery(MEDIAWIKI_VECTOR_SURFACE_SELECTORS)},
 ${scopeEvery(PANEL_SURFACE_SELECTORS)} {
   background-color: #1e1e1e !important;
   color: #e4e4e4 !important;
