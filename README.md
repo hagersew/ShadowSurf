@@ -2,6 +2,8 @@
 
 ShadowSurf is an open-source Chrome extension that brings modern dark mode to websites with global and per-site controls.
 
+[Download Extension](https://chromewebstore.google.com/detail/cpaeljippeleemiejdjndmgffggbkkjc?utm_source=item-share-cp)
+
 ## Features
 
 - Manifest V3 extension with React + TypeScript + Chakra UI popup.
